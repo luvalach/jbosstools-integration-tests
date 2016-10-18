@@ -1,22 +1,22 @@
 package org.jboss.tools.cdi.bot.test.validation.template;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.jboss.reddeer.common.wait.TimePeriod;
 import org.jboss.reddeer.common.wait.WaitUntil;
 import org.jboss.reddeer.common.wait.WaitWhile;
 import org.jboss.reddeer.core.condition.JobIsRunning;
 import org.jboss.reddeer.core.condition.ProgressInformationShellIsActive;
-import org.jboss.reddeer.core.condition.ShellWithTextIsActive;
 import org.jboss.reddeer.core.condition.ShellWithTextIsAvailable;
 import org.jboss.reddeer.eclipse.condition.ProblemExists;
 import org.jboss.reddeer.eclipse.jdt.ui.ProjectExplorer;
-import org.jboss.reddeer.workbench.ui.dialogs.WorkbenchPreferenceDialog;
 import org.jboss.reddeer.eclipse.ui.problems.ProblemsView;
 import org.jboss.reddeer.eclipse.ui.problems.ProblemsView.ProblemType;
 import org.jboss.reddeer.swt.impl.button.PushButton;
 import org.jboss.reddeer.swt.impl.shell.DefaultShell;
 import org.jboss.reddeer.workbench.impl.editor.TextEditor;
+import org.jboss.reddeer.workbench.ui.dialogs.WorkbenchPreferenceDialog;
 import org.jboss.tools.cdi.bot.test.CDITestBase;
 import org.jboss.tools.cdi.reddeer.cdi.ui.CDIValidatorPreferencePage;
 import org.junit.AfterClass;
@@ -104,7 +104,7 @@ public class CDIValidatorTemplate extends CDITestBase {
 		DefaultShell shell = new DefaultShell("Validator Settings Changed");
 		String shellText = shell.getText();
 		new PushButton("Yes").click();
-		new WaitWhile(new ShellWithTextIsActive(shellText), TimePeriod.LONG);
+		new WaitWhile(new ShellWithTextIsAvailable(shellText), TimePeriod.LONG);
 	}
 
 }

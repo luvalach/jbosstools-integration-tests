@@ -24,16 +24,16 @@ import org.jboss.reddeer.common.wait.TimePeriod;
 import org.jboss.reddeer.common.wait.WaitUntil;
 import org.jboss.reddeer.common.wait.WaitWhile;
 import org.jboss.reddeer.core.condition.JobIsRunning;
-import org.jboss.reddeer.core.condition.ShellWithTextIsActive;
+import org.jboss.reddeer.core.condition.ShellWithTextIsAvailable;
 import org.jboss.reddeer.core.lookup.ShellLookup;
 import org.jboss.reddeer.eclipse.core.resources.Project;
 import org.jboss.reddeer.eclipse.jdt.ui.ProjectExplorer;
-import org.jboss.reddeer.workbench.handler.EditorHandler;
-import org.jboss.reddeer.workbench.impl.shell.WorkbenchShell;
-import org.jboss.reddeer.workbench.ui.dialogs.WorkbenchPreferenceDialog;
 import org.jboss.reddeer.eclipse.jst.servlet.ui.WebProjectFirstPage;
 import org.jboss.reddeer.junit.requirement.inject.InjectRequirement;
 import org.jboss.reddeer.swt.impl.shell.DefaultShell;
+import org.jboss.reddeer.workbench.handler.EditorHandler;
+import org.jboss.reddeer.workbench.impl.shell.WorkbenchShell;
+import org.jboss.reddeer.workbench.ui.dialogs.WorkbenchPreferenceDialog;
 import org.jboss.tools.cdi.reddeer.cdi.ui.CDIProjectWizard;
 import org.jboss.tools.cdi.reddeer.uiutils.BeansHelper;
 import org.jboss.tools.cdi.reddeer.uiutils.BeansXMLHelper;
@@ -154,7 +154,7 @@ public class CDITestBase{
 		sourceLookupPreferencePage.setSourceAttachment(
 				SourceLookupPreferencePage.SourceAttachmentEnum.NEVER);
 		preferenceDialog.ok();
-		new WaitUntil(new ShellWithTextIsActive(originalShellText));
+		new WaitUntil(new ShellWithTextIsAvailable(originalShellText));
 	}
 	
 	public void refreshProject(){
