@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -15,6 +16,8 @@ import org.jboss.reddeer.core.lookup.ShellLookup;
 import org.jboss.reddeer.core.lookup.WidgetLookup;
 import org.jboss.reddeer.core.matcher.WithTextMatcher;
 import org.jboss.reddeer.core.reference.ReferencedComposite;
+import org.jboss.reddeer.core.util.Display;
+import org.jboss.reddeer.core.util.ResultRunnable;
 import org.jboss.reddeer.swt.api.Table;
 import org.jboss.reddeer.swt.api.TableItem;
 import org.jboss.reddeer.swt.condition.ShellIsAvailable;
@@ -53,13 +56,36 @@ public class HierarchyInformationControl extends AbstractShell{
 	private static org.eclipse.swt.widgets.Shell lookForShellWithLabel(final String label) {
 		Matcher<String> labelMatcher = new BaseMatcher<String>() {
 			public boolean matches(Object obj) {
+				final Shell s = ShellLookup.getInstance().getWorkbenchShell();
+				
+				if(obj.equals(s)){
+					return false;
+				}
+				
 				if (obj instanceof Control) {
 					final Control control = (Control) obj;
+					
+					boolean b = Display.syncExec(new ResultRunnable<Boolean>() {
+
+						@Override
+						public Boolean run() {
+							if(!(control instanceof Shell) &&control.getShell().equals(s)){
+								return true;
+							}
+							return false;
+						}
+					});
+					
+					if(b){
+						return false;
+					}
+					
 					ReferencedComposite ref = new ReferencedComposite() {
 						public Control getControl() {
 							return control;
 						}
 					};
+					
 					try {
 						org.eclipse.swt.widgets.Label l = WidgetLookup.getInstance().
 								activeWidget(ref, org.eclipse.swt.widgets.Label.class, 0, TimePeriod.NONE, new WithTextMatcher(label));
