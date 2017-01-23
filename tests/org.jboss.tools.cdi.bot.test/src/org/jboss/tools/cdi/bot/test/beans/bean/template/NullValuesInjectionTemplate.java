@@ -42,16 +42,15 @@ public class NullValuesInjectionTemplate extends CDITestBase{
 		te.insertLine(4, "@ApplicationScoped");
 		te.insertLine(6, "@Inject @Qa boolean primitiveB;");
 		te.insertLine(7, "@Inject @Qa Boolean objectB;");
+		new WaitUntil(new EditorHasValidationMarkers(te),TimePeriod.NORMAL,false);
+		
 		if(CDIVersion.equals("1.0")){
-			new WaitUntil(new EditorHasValidationMarkers(te),TimePeriod.NORMAL,false);
 			assertTrue(new EditorHasValidationMarkers(te).test());
 			te.save();
 			new WaitWhile(new JobIsRunning());
 			new WaitUntil(new EditorHasValidationMarkers(te),TimePeriod.NORMAL,false);
 			assertTrue(new EditorHasValidationMarkers(te).test());
 		} else {
-			new WaitUntil(new EditorHasValidationMarkers(te),TimePeriod.NORMAL,false);
-			new WaitWhile(new EditorHasValidationMarkers(te));
 			te.save();
 			new WaitWhile(new JobIsRunning());
 			new WaitUntil(new EditorHasValidationMarkers(te),TimePeriod.NORMAL,false);

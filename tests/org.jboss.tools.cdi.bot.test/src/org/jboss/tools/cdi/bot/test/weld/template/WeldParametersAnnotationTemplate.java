@@ -47,20 +47,12 @@ public class WeldParametersAnnotationTemplate extends CDITestBase{
 		te.insertLine(4, "import java.util.List;");
 		te.insertLine(5, "import org.jboss.weld.environment.se.bindings.Parameters;");
 		te.insertLine(6, "@ApplicationScoped");
-		AbstractWait.sleep(TimePeriod.NORMAL);
 		te.insertLine(8, "@Inject @Parameters List<String> parameters;");
 		te.insertLine(9, "@Inject @Parameters String[] paramsArray;");
-		new WaitWhile(new JobIsRunning());
-		new WaitWhile(new EditorHasValidationMarkers(te),TimePeriod.NORMAL, false);
-		assertEquals(0,te.getMarkers().size());
 		te.save();
 		new WaitUntil(new JobIsRunning(),TimePeriod.SHORT,false);
 		new WaitWhile(new JobIsRunning());
+		new WaitWhile(new EditorHasValidationMarkers(te),TimePeriod.NORMAL, false);
 		assertEquals(0,te.getMarkers().size());
-		
-		
 	}
-	
-	
-
 }

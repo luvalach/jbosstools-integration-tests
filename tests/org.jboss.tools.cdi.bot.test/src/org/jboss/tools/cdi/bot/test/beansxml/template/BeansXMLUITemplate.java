@@ -7,6 +7,8 @@ import java.util.List;
 import org.jboss.reddeer.common.logging.Logger;
 import org.jboss.reddeer.common.wait.TimePeriod;
 import org.jboss.reddeer.common.wait.WaitUntil;
+import org.jboss.reddeer.eclipse.condition.ExactNumberOfProblemsExists;
+import org.jboss.reddeer.eclipse.ui.problems.ProblemsView.ProblemType;
 import org.jboss.reddeer.swt.impl.styledtext.DefaultStyledText;
 import org.jboss.reddeer.workbench.api.Editor;
 import org.jboss.reddeer.workbench.condition.EditorHasValidationMarkers;
@@ -97,12 +99,16 @@ public class BeansXMLUITemplate extends CDITestBase{
 		ds.setText(s);
 		Editor e = new DefaultEditor();
 		e.save();
-		new WaitUntil(new EditorHasValidationMarkers(e),TimePeriod.NORMAL,false);
+		
+		CDITestBase.validateProject(PROJECT_NAME);
+		new WaitUntil(new ExactNumberOfProblemsExists(ProblemType.ANY, expectedNumberOfErrors),TimePeriod.NORMAL,false);
 		List<Marker> markers = e.getMarkers();
 		assertEquals(expectedNumberOfErrors,markers.size());
+		
 		for(Marker m: markers){
 			m.getType().equals(type);
 		}
+		
 		beans.activateTreePage();
 		assertEquals(mode,beans.getBeanDiscoveryMode());
 		beans.save();

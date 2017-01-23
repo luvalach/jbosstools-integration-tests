@@ -19,7 +19,9 @@ import org.jboss.reddeer.common.wait.AbstractWait;
 import org.jboss.reddeer.common.wait.TimePeriod;
 import org.jboss.reddeer.common.wait.WaitUntil;
 import org.jboss.reddeer.common.wait.WaitWhile;
+import org.jboss.reddeer.core.condition.JobIsRunning;
 import org.jboss.reddeer.core.condition.ShellWithTextIsAvailable;
+import org.jboss.reddeer.eclipse.condition.ExactNumberOfProblemsExists;
 import org.jboss.reddeer.eclipse.condition.ProblemExists;
 import org.jboss.reddeer.eclipse.core.resources.Project;
 import org.jboss.reddeer.eclipse.jdt.ui.ProjectExplorer;
@@ -29,6 +31,7 @@ import org.jboss.reddeer.swt.impl.menu.ContextMenu;
 import org.jboss.reddeer.swt.impl.shell.DefaultShell;
 import org.jboss.reddeer.swt.impl.tree.DefaultTreeItem;
 import org.jboss.reddeer.workbench.handler.EditorHandler;
+import org.jboss.tools.cdi.bot.test.CDITestBase;
 import org.junit.After;
 import org.junit.Test;
 import org.jboss.reddeer.eclipse.ui.problems.Problem;
@@ -65,13 +68,16 @@ public class ProjectWithCDITemplate{
 	public void testCDISupport(){
 		openCDIPage();
 		if(enabledByDefault){
-			assertTrue(new LabeledCheckBox("CDI support:").isChecked());
+			assertTrue("CDI support should be enabled by default", new LabeledCheckBox("CDI support:").isChecked());
 		} else {
-			assertFalse(new LabeledCheckBox("CDI support:").isChecked());
+			assertFalse("CDI support should be disabled by default", new LabeledCheckBox("CDI support:").isChecked());
 		}
 		new OkButton().click();
+		
 		new WaitWhile(new ShellWithTextIsAvailable("Properties for "+PROJECT_NAME));
+		CDITestBase.validateProject(PROJECT_NAME);
 		new WaitUntil(new ProblemExists(ProblemType.ANY), TimePeriod.LONG, false);
+		
 		if(expectedProblem != null){
 			ProblemsView pw = new ProblemsView();
 			pw.open();
@@ -84,6 +90,7 @@ public class ProjectWithCDITemplate{
 	
 	@Test
 	public void addCDISupport(){
+		//Disable CDI support if is enabled.
 		openCDIPage();
 		LabeledCheckBox cdiSupport = new LabeledCheckBox("CDI support:");
 		if(cdiSupport.isChecked()){
@@ -91,13 +98,18 @@ public class ProjectWithCDITemplate{
 		}
 		new OkButton().click();
 		new WaitWhile(new ShellWithTextIsAvailable("Properties for "+PROJECT_NAME));
+		
+		//Enable CDI support
 		openCDIPage();
 		cdiSupport = new LabeledCheckBox("CDI support:");
 		assertFalse(cdiSupport.isChecked());
 		cdiSupport.toggle(true);
 		new OkButton().click();
 		new WaitWhile(new ShellWithTextIsAvailable("Properties for "+PROJECT_NAME));
-		new WaitUntil(new ProblemExists(ProblemType.ANY), TimePeriod.LONG, false);
+		
+		//Wait and check if all expected problems has been detected
+		int expectedProblems = expectedProblemAdded != null ? expectedProblemAdded.size() : 0;
+		new WaitUntil(new ExactNumberOfProblemsExists(ProblemType.ANY, expectedProblems), TimePeriod.LONG, false);
 		if(expectedProblemAdded != null){
 			ProblemsView pw = new ProblemsView();
 			pw.open();
@@ -117,6 +129,7 @@ public class ProjectWithCDITemplate{
 		} else {
 			new WaitWhile(new ProblemExists(ProblemType.ANY));
 		}
+		
 		openCDIPage();
 		cdiSupport = new LabeledCheckBox("CDI support:");
 		assertTrue(cdiSupport.isChecked());
@@ -133,13 +146,17 @@ public class ProjectWithCDITemplate{
 		}
 		new OkButton().click();
 		new WaitWhile(new ShellWithTextIsAvailable("Properties for "+PROJECT_NAME));
+		
 		openCDIPage();
 		cdiSupport = new LabeledCheckBox("CDI support:");
 		assertTrue(cdiSupport.isChecked());
 		cdiSupport.toggle(false);
 		new OkButton().click();
+		
 		new WaitWhile(new ShellWithTextIsAvailable("Properties for "+PROJECT_NAME));
+		CDITestBase.validateProject(PROJECT_NAME);
 		new WaitUntil(new ProblemExists(ProblemType.ANY), TimePeriod.LONG, false);
+		
 		if(expectedProblemRemoved != null){
 			ProblemsView pw = new ProblemsView();
 			pw.open();
@@ -148,6 +165,7 @@ public class ProjectWithCDITemplate{
 		} else {
 			new WaitWhile(new ProblemExists(ProblemType.ANY));
 		}
+		
 		openCDIPage();
 		cdiSupport = new LabeledCheckBox("CDI support:");
 		assertFalse(cdiSupport.isChecked());
@@ -167,5 +185,4 @@ public class ProjectWithCDITemplate{
 		new ContextMenu("Properties").select();
 		new DefaultShell("Properties for "+projectName);
 	}
-
 }

@@ -33,6 +33,7 @@ import org.jboss.reddeer.workbench.impl.shell.WorkbenchShell;
 import org.jboss.reddeer.workbench.ui.dialogs.WorkbenchPreferenceDialog;
 import org.jboss.reddeer.eclipse.jst.servlet.ui.WebProjectFirstPage;
 import org.jboss.reddeer.junit.requirement.inject.InjectRequirement;
+import org.jboss.reddeer.swt.impl.menu.ContextMenu;
 import org.jboss.reddeer.swt.impl.shell.DefaultShell;
 import org.jboss.tools.cdi.reddeer.cdi.ui.CDIProjectWizard;
 import org.jboss.tools.cdi.reddeer.uiutils.BeansHelper;
@@ -161,5 +162,13 @@ public class CDITestBase{
 		ProjectExplorer pe = new ProjectExplorer();
 		pe.open();
 		pe.getProject(getProjectName()).refresh();
+	}
+	
+	public static void validateProject(String projectName){
+		ProjectExplorer pe = new ProjectExplorer();
+		pe.open();
+		pe.getProject(projectName).select();
+		new ContextMenu("Validate").select();
+		new WaitWhile(new JobIsRunning(), TimePeriod.LONG);
 	}
 }
