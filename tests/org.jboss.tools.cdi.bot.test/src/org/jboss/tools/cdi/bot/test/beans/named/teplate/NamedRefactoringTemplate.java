@@ -11,8 +11,10 @@ import java.util.List;
 
 import org.eclipse.reddeer.common.wait.AbstractWait;
 import org.eclipse.reddeer.common.wait.TimePeriod;
+import org.eclipse.reddeer.common.wait.WaitUntil;
 import org.eclipse.reddeer.swt.impl.menu.ContextMenu;
 import org.eclipse.reddeer.swt.impl.shell.DefaultShell;
+import org.eclipse.reddeer.workbench.condition.EditorIsDirty;
 import org.eclipse.reddeer.workbench.impl.editor.DefaultEditor;
 import org.eclipse.reddeer.workbench.impl.editor.TextEditor;
 import org.jboss.tools.cdi.bot.test.CDITestBase;
@@ -52,10 +54,6 @@ public abstract class NamedRefactoringTemplate extends CDITestBase {//extends JS
 		Collection<String> expectedAffectedFiles = Arrays.asList(
 				MANAGED_BEAN_1 + ".java", INDEX_XHTML_1, INDEX_XHTML_3);
 	
-		for (String affectedFile : affectedFiles) {
-			new DefaultEditor(affectedFile).save();
-		}
-	
 		assertEquals(expectedAffectedFiles.size(), affectedFiles.size());
 		assertTrue(CollectionsUtil.compareTwoCollectionsEquality(
 				expectedAffectedFiles, affectedFiles));
@@ -85,10 +83,6 @@ public abstract class NamedRefactoringTemplate extends CDITestBase {//extends JS
 		Collection<String> expectedAffectedFiles = Arrays.asList(
 				MANAGED_BEAN_2 + ".java", INDEX_XHTML_2, INDEX_XHTML_3);
 	
-		for (String affectedFile : affectedFiles) {
-			new DefaultEditor(affectedFile).save();
-		}
-	
 		assertEquals(expectedAffectedFiles.size(), affectedFiles.size());
 		assertTrue(CollectionsUtil.compareTwoCollectionsEquality(
 				expectedAffectedFiles, affectedFiles));
@@ -115,10 +109,6 @@ public abstract class NamedRefactoringTemplate extends CDITestBase {//extends JS
 			
 		Collection<String> affectedFiles = changeNamedAnnotation(MANAGED_BEAN_2, NEW_NAMED_PARAM);
 		Collection<String> expectedAffectedFiles = Arrays.asList(MANAGED_BEAN_2 + ".java", INDEX_XHTML_2);
-	
-		for (String affectedFile : affectedFiles) {
-			new DefaultEditor(affectedFile).save();
-		}
 	
 		assertEquals(expectedAffectedFiles.size(), affectedFiles.size());
 		assertTrue(CollectionsUtil.compareTwoCollectionsEquality(

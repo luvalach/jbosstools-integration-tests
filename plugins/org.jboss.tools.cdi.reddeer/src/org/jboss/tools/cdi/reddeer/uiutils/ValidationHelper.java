@@ -9,12 +9,14 @@ import org.eclipse.reddeer.common.condition.AbstractWaitCondition;
 import org.eclipse.reddeer.common.exception.RedDeerException;
 import org.eclipse.reddeer.common.wait.TimePeriod;
 import org.eclipse.reddeer.common.wait.WaitUntil;
+import org.eclipse.reddeer.common.wait.WaitWhile;
 import org.eclipse.reddeer.core.exception.CoreLayerException;
 import org.eclipse.reddeer.eclipse.ui.problems.Problem;
 import org.eclipse.reddeer.eclipse.ui.views.markers.ProblemsView;
 import org.eclipse.reddeer.eclipse.ui.views.markers.ProblemsView.ProblemType;
 import org.eclipse.reddeer.eclipse.ui.views.markers.QuickFixPage;
 import org.eclipse.reddeer.eclipse.ui.views.markers.QuickFixWizard;
+import org.eclipse.reddeer.workbench.core.condition.JobIsRunning;
 import org.jboss.tools.cdi.reddeer.validators.ValidationProblem;
 
 public class ValidationHelper {
@@ -97,5 +99,6 @@ public class ValidationHelper {
 		}
 		qp.selectFix(chosenFix);
 		qf.finish();
+		new WaitWhile(new JobIsRunning(), false);
 	}
 }

@@ -38,7 +38,7 @@ public class BeansXMLValidationTestCDI10 extends BeansXMLValidationTemplate {
 
 	@RequirementRestriction
 	public static RequirementMatcher getRestrictionMatcher() {
-		return new RequirementMatcher(JBossServer.class, "family", ServerMatcher.Eap());
+		return new RequirementMatcher(JBossServer.class, "family", ServerMatcher.AS());
 	}
 
 	@Before
@@ -47,9 +47,7 @@ public class BeansXMLValidationTestCDI10 extends BeansXMLValidationTemplate {
 
 		EditorPartWrapper beansEditor = beansXMLHelper.openBeansXml(PROJECT_NAME);
 		beansEditor.activateSourcePage();
-		new EditorResourceHelper().replaceInEditor("/>", "></beans>", false);
-		new WaitUntil(new EditorIsDirty(beansEditor), false);
-		beansEditor.save();
+		new EditorResourceHelper().replaceInEditor("/>", "></beans>", true);
 		beansEditor.close();
 	}
 }
