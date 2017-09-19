@@ -44,7 +44,7 @@ public class BeansXMLDiscoveryModesTemplate extends CDITestBase{
 	
 	@Test
 	public void testModeAll(){
-		setMode("all");
+		prepareBeanXml("all", false);
 		TextEditor ed = new TextEditor("Bean1.java");
 		try{
 			new WaitWhile(new EditorHasValidationMarkers(ed));
@@ -57,7 +57,7 @@ public class BeansXMLDiscoveryModesTemplate extends CDITestBase{
 	
 	@Test
 	public void testModeAnnotated(){
-		setMode("annotated");
+		prepareBeanXml("annotated", false);
 		TextEditor ed = new TextEditor("Bean1.java");
 		List<Marker> markers = ed.getMarkers();
 		assertEquals(0,markers.size());
@@ -87,7 +87,7 @@ public class BeansXMLDiscoveryModesTemplate extends CDITestBase{
 	
 	@Test
 	public void testModeNone(){
-		setMode("none");
+		prepareBeanXml("none", false);
 		TextEditor ed = new TextEditor("Bean1.java");
 		new WaitWhile(new EditorHasValidationMarkers(ed),TimePeriod.DEFAULT, false);
 		List<Marker> markers = ed.getMarkers();
